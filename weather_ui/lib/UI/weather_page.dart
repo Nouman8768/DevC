@@ -17,8 +17,13 @@ class WeatherPage extends StatefulWidget {
 
 class _WeatherPageState extends State<WeatherPage> {
   OpenweatherApiDataRequester api = OpenweatherApiDataRequester(
-    location: 'Azad Kashmir',
+    location: 'New York',
   );
+
+  Stream<ApiData> openweatherstreamdata() async* {
+    yield* Stream.fromFuture(api.getData());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -700,8 +705,8 @@ class _WeatherPageState extends State<WeatherPage> {
           ),
           Row(
             children: [
-              FutureBuilder(
-                future: api.getData(),
+              StreamBuilder(
+                stream: openweatherstreamdata(),
                 builder: (context, AsyncSnapshot<ApiData> snapshot) {
                   if (snapshot.hasData) {
                     return RichText(
@@ -740,8 +745,8 @@ class _WeatherPageState extends State<WeatherPage> {
               SizedBox(
                 width: 110,
               ),
-              FutureBuilder(
-                future: api.getData(),
+              StreamBuilder(
+                stream: openweatherstreamdata(),
                 builder: (context, AsyncSnapshot<ApiData> snapshot) {
                   if (snapshot.hasData) {
                     var currentweathericon = snapshot.data!.uiicon;
